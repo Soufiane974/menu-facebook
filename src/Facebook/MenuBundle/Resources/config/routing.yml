@@ -1,0 +1,7 @@
+facebook_menu_homepage:
+    path:     /
+    defaults: { _controller: FacebookMenuBundle:Default:index }
+
+facebook_menu_fbcallback:
+    path:     /callbackFb
+    defaults: { _controller: FacebookMenuBundle:FacebookAPI:callbackFb }

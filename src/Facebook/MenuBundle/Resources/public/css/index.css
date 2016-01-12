@@ -1,0 +1,66 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10 janv. 2016, 11:32:10
+    Author     : Soufiane
+*/
+
+@font-face {
+    font-family: 'paradise'; /*a name to be used later*/
+    src: url('../fonts/chmp0.ttf'); /*URL to font*/
+}
+
+body{
+    margin : 10px;
+    padding : 10px;
+    background-color: #E2DAC3;
+}
+
+#content{
+    width : 95%;
+    margin: auto;
+    font-family:"paradise", times, serif;
+}
+
+#menu{
+    width : 100%;
+    margin:auto;
+    border-spacing: 30px;
+    border-collapse: separate;
+    
+}
+
+#menu tr th{
+    border-top : 2px dashed grey;
+    border-bottom : 2px dashed grey;
+    font-size: 2em;
+    padding: 8px;
+}
+
+#menu tr td{
+    border-bottom: 1px dashed grey;
+    vertical-align: top;
+}
+
+p{
+    font-size: 1.5em;
+    position: relative;
+    bottom: 10px;
+}
+
+
+
+.menu_picture{
+    float: left;
+    width: 250px;
+    margin-right: 5px;
+}
+
+h1{
+    color: #34B2E1;
+    text-align: center;
+    font-size: 3.5em;
+}

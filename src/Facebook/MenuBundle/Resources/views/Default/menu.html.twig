@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{{ Title }}</title>
+        <link href="{{ asset('bundles/facebookmenu/css/index.css') }}" type="text/css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="content">
+            <h1>Menu des restaurants</h1>
+            <table id="menu">
+                <tr>                
+                    <th>L'lilôt Régal</th>
+                    <th>Le régal du circuit</th>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                        {% for menu in menu_ilot %}
+                        <tr>
+                            <td>
+                                <img src="{{ menu.full_picture }}" alt="thumbs" class="menu_picture" />
+                                <p>{{ menu.message }}</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                        {% for menu in menu_regal %}
+                        <tr>
+                            <td>
+                                <img src="{{ menu.full_picture }}" alt="thumbs" class="menu_picture" />
+                                <p>{{ menu.message }}</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

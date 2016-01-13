@@ -46,6 +46,9 @@ class FacebookAPIController extends Controller {
      * @return object
      */
     public function callbackFbAction() {
+        if(!session_id()){
+            session_start();
+        }
         $fb = new Facebook([
             "app_id" => self::fb_appId,
             "app_secret" => self::fb_secret,
@@ -54,7 +57,7 @@ class FacebookAPIController extends Controller {
 
         $helper = $fb->getRedirectLoginHelper();
 
-        //Tentative de récupérationde l'access token
+        //Tentative de récupération de l'access token
         try {
             $accessToken = $helper->getAccessToken();
         } catch (Facebook\Exceptions\FacebookResponseException $e) {

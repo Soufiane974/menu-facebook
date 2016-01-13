@@ -16,6 +16,9 @@ class DefaultController extends Controller {
     
     public function indexAction()
     {
+        if(!session_id()){
+            session_start();
+        }
         $facebook = new FacebookAPIController();    //Creation du controleur FacebookAPI
         $isLoggedIn = $facebook->isLoggedIn();  //On verifie si on possède déja un access token
         
@@ -47,6 +50,7 @@ class DefaultController extends Controller {
      */
     public function killSession(){
         unset($_SESSION["facebook_access_token"]);
+        session_destroy();
         exit;
     }
 }

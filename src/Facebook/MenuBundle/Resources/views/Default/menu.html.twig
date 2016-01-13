@@ -9,29 +9,59 @@
             <h1>Menu des restaurants</h1>
             <table id="menu">
                 <tr>                
-                    <th>L'lilôt Régal</th>
-                    <th>Le régal du circuit</th>
+                    <th class="restaurant_title">L'lilôt Régal</th>
+                    <th class="restaurant_title">Le régal du circuit</th>
                 </tr>
                 <tr>
-                    <td>
-                        <table>
+                    <td width="50%">
+                        <table class="item_menu">
                         {% for menu in menu_ilot %}
+                        <tr>
+                            <th colspan="2">
+                                <span class="menu_title">{{ menu.title | raw }} {% if menu.menu_du_jour %} [MENU DU JOUR] {% endif %}</span>
+                            </th>
+                        </tr>
                         <tr>
                             <td>
                                 <img src="{{ menu.full_picture }}" alt="thumbs" class="menu_picture" />
-                                <p>{{ menu.message }}</p>
+                                <p>
+                                    {{ menu.message | raw }}
+                                    {% if menu.keyword_found %}
+                                        <br /><br />
+                                        <img src="{{ asset('bundles/facebookmenu/img/info.png') }}" alt="thumbs" class="favorite_menu_icon" />
+                                        Présence de plat favori : 
+                                        {% for plat_favori in menu.plats_favoris %}
+                                            <b>{{ plat_favori }}</b>
+                                        {% endfor %}
+                                    {% endif %}  
+                                </p>
                             </td>
                         </tr>
                         {% endfor %}
                         </table>
                     </td>
-                    <td>
+                    <td width="50%">
                         <table>
                         {% for menu in menu_regal %}
                         <tr>
+                            <th colspan="2">
+                                <span class="menu_title">{{ menu.title | raw }} {% if menu.menu_du_jour %} [MENU DU JOUR] {% endif %}</span>
+                            </th>
+                        </tr>
+                        <tr>
                             <td>
                                 <img src="{{ menu.full_picture }}" alt="thumbs" class="menu_picture" />
-                                <p>{{ menu.message }}</p>
+                                <p>
+                                    {{ menu.message | raw }}
+                                    {% if menu.keyword_found %}
+                                        <br /><br />
+                                        <img src="{{ asset('bundles/facebookmenu/img/info.png') }}" alt="thumbs" class="favorite_menu_icon" />
+                                        Présence de plat favori : 
+                                        {% for plat_favori in menu.plats_favoris %}
+                                            <b>{{ plat_favori }}</b>
+                                        {% endfor %}
+                                    {% endif %}
+                                </p>
                             </td>
                         </tr>
                         {% endfor %}

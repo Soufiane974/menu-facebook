@@ -9,8 +9,13 @@ and open the template in the editor.
 */
 
 @font-face {
-    font-family: 'paradise'; /*a name to be used later*/
-    src: url('../fonts/chmp0.ttf'); /*URL to font*/
+    font-family: 'chmplight'; /*a name to be used later*/
+    src: url('../fonts/chmp.ttf'); /*URL to font*/
+}
+
+@font-face {
+    font-family: 'chmpbold'; /*a name to be used later*/
+    src: url('../fonts/chmpbold.ttf'); /*URL to font*/
 }
 
 body{
@@ -22,45 +27,7 @@ body{
 #content{
     width : 95%;
     margin: auto;
-    font-family:"paradise", times, serif;
-}
-
-#menu{
-    width : 100%;
-    margin:auto;
-    border-spacing: 30px;
-    border-collapse: separate;
-    
-}
-
-#menu tr th{
-    border-top : 2px dashed grey;
-    border-bottom : 2px dashed grey;
-    font-size: 2em;
-    padding: 8px;
-}
-
-#menu tr td{
-    border-bottom: 1px dashed grey;
-    vertical-align: top;
-}
-
-p{
-    font-size: 1.5em;
-    position: relative;
-    bottom: 10px;
-}
-
-
-
-.menu_picture{
-    float: left;
-    width: 250px;
-    margin-right: 5px;
-}
-
-h1{
-    color: #34B2E1;
+    font-family:"chmplight", times, serif;
     text-align: center;
-    font-size: 3.5em;
+    font-size: 1.5em;
 }

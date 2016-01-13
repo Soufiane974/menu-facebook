@@ -12,6 +12,33 @@ class FacebookAPIController extends Controller {
 
     const fb_appId = "994872597252810"; //API_ID
     const fb_secret = "953b1e6530e855a3b727bf5a1ad677d2"; //SECRET
+    
+    private $weekdays = [
+        1 => "Lundi",
+        2 => "Mardi",
+        3 => "Mercredi",
+        4 => "Jeudi",
+        5 => "Vendredi",
+        6 => "Samedi",
+        7 => "Dimanche"
+    ];
+
+    private $months = [
+        1 => "Janvier",
+        2 => "Fevrier",
+        3 => "Mars",
+        4 => "Avril",
+        5 => "Mai",
+        6 => "Juin",
+        7 => "Juillet",
+        8 => "Aout",
+        9 => "Septembre",
+        10 => "Octobre",
+        11 => "Novembre",
+        12 => "Decembre"
+    ];
+    
+    private $keywords = ["Poulet à la crème", "Rougaille Saucisse", "Rôti porc", "Civet cerf", "Canard aux olives"];
 
     /**
      * Renvoi vrai si l'utilisateur est loggé sur facebook, faux sinon(présence d'un access token ou non)
@@ -92,16 +119,55 @@ class FacebookAPIController extends Controller {
 
         $accessToken = $_SESSION["facebook_access_token"];  //Récupération de l'access token
         
-        $rq = $fb->get('/lilotregal/posts?fields=message,picture,full_picture', $accessToken); //Requete 
-        $array = json_decode($rq->getBody()); //Conversion json -> php
+        $rq = $fb->get('/lilotregal/posts?fields=message,picture,full_picture', $accessToken); //Requete
+        $feed = json_decode($rq->getBody()); //Conversion json -> php
         
         //On trie les news contenant un menu du jour
-        foreach($array->data as $key => $post){
-            if (strpos($post->message,'Menu du') === false) {
-                unset($array->data[$key]);
+        $posts_menu_array = array();
+        foreach($feed->data as $key => $post){
+            if (strpos($post->message,'Menu du') !== false) {
+                $exploded_message = explode(":", $post->message, 2);    //On sépare le menu du jour et le corps du post
+                $title = $exploded_message[0];
+                $message = $exploded_message[1];
+                
+                $message = nl2br($message); //Conversion des \n en <br/>
+                
+                //Date du jour au format mercredi 13 janvier sans les accents
+                $date_du_jour = strtolower($this->weekdays[date("N")]. " " . date("j") . " " . $this->months[date("n")]);
+                $date_du_jour = $this->wd_remove_accents($date_du_jour);    
+                
+                //Date du menu
+                $exploded_title = explode("Menu du", $title);   
+                $date_menu = trim($this->wd_remove_accents($exploded_title[1]));
+                
+                //Présence des mots clés
+                $keyword_found = false;
+                $plats_favoris = array();
+                foreach($this->keywords as $keyword){
+                    $a = $this->wd_remove_accents(strtolower($message));
+                    if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
+                        $keyword_found = true;
+                        array_push($plats_favoris, $keyword);
+                    }
+                }
+                
+                $post_menu = [
+                    "title" => trim(strstr($title, 'Menu')), //strstr sert à enlever tout ce qui se trouve avant le pattern "Menu"
+                    "message" => preg_replace('/<br \/>/', '', $message, 1), //On remplacer le premier <br/> pour une meilleure lisibilté
+                    "picture" => $post->picture,
+                    "full_picture" => $post->full_picture,
+                    "menu_du_jour" => ($date_menu == $date_du_jour),
+                    "keyword_found" => $keyword_found,
+                    "plats_favoris" => $plats_favoris
+                ];
+                array_push($posts_menu_array, $post_menu);
+            }
+            if(count($posts_menu_array) >= 3){
+                break;
             }
         }
-        return $array->data;
+
+        return $posts_menu_array;
     }
     
     /**
@@ -119,13 +185,61 @@ class FacebookAPIController extends Controller {
         $accessToken = $_SESSION["facebook_access_token"];  //Récupération de l'access token
         
         $rq = $fb->get('/649823778452363/posts?fields=message,picture,full_picture', $accessToken);  //Requete 
-        $array = json_decode($rq->getBody());   //Conversion json -> php
-        
-        foreach($array->data as $key => $post){
-            if (strpos($post->message,'Repas du') === false) {
-                unset($array->data[$key]);
+        $feed = json_decode($rq->getBody());   //Conversion json -> php
+
+        //On trie les news contenant un menu du jour
+        $posts_menu_array = array();
+        foreach($feed->data as $key => $post){
+            if (strpos($post->message,'Repas du') !== false) {
+                $exploded_message = explode("\n", $post->message, 2);    //On sépare le menu du jour et le corps du post
+                $title = $exploded_message[0];
+                $message = $exploded_message[1];
+                
+                $message = nl2br($message); //Conversion des \n en <br/>
+                
+                $date_du_jour = strtolower($this->weekdays[date("N")]. " " . date("j") . " " . $this->months[date("n")]);
+                $date_du_jour = $this->wd_remove_accents($date_du_jour);
+                
+                $exploded_title = explode("Repas du jour", $title);
+                $date_menu = trim($this->wd_remove_accents($exploded_title[1]));
+                
+                //Présence des mots clés
+                $keyword_found = false;
+                $plats_favoris = array();
+                foreach($this->keywords as $keyword){
+                    $a = $this->wd_remove_accents(strtolower($message));
+                    if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
+                        $keyword_found = true;
+                        array_push($plats_favoris, $keyword);
+                    }
+                }
+                
+                $post_menu = [
+                    "title" => trim(strstr($title, 'Repas')), //strstr sert à enlever tout ce qui se trouve avant le pattern "Repas"
+                    "message" => preg_replace('/<br \/>/', '', $message, 1), //On remplacer le premier <br/> pour une meilleure lisibilté
+                    "picture" => $post->picture,
+                    "full_picture" => $post->full_picture,
+                    "menu_du_jour" => ($date_menu == $date_du_jour),
+                    "keyword_found" => $keyword_found,
+                    "plats_favoris" => $plats_favoris
+                ];
+                array_push($posts_menu_array, $post_menu);
+            }
+            if(count($posts_menu_array) >= 3){
+                break;
             }
         }
-        return $array->data;
+        return $posts_menu_array;
     }
+    
+    function wd_remove_accents($str, $charset = 'utf-8') {
+        $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+        $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+        $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
+        $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
+
+        return $str;
+    }
+
 }

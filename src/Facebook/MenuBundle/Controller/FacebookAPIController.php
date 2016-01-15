@@ -38,7 +38,7 @@ class FacebookAPIController extends Controller {
         12 => "Decembre"
     ];
     
-    private $keywords = ["Poulet à la crème", "Rougaille Saucisse", "Rôti porc", "Civet cerf", "Canard aux olives"];
+    private $keywords = ["Poulet à la crème", "Rougaille Saucisse", "Rôti porc", "Civet cerf", "Canard aux olives", "Riz blanc"];
 
     /**
      * Renvoi vrai si l'utilisateur est loggé sur facebook, faux sinon(présence d'un access token ou non)
@@ -145,9 +145,11 @@ class FacebookAPIController extends Controller {
                 $plats_favoris = array();
                 foreach($this->keywords as $keyword){
                     $a = $this->wd_remove_accents(strtolower($message));
-                    if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
-                        $keyword_found = true;
-                        array_push($plats_favoris, $keyword);
+                    if(!empty($a)){
+                        if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
+                            $keyword_found = true;
+                            array_push($plats_favoris, $keyword);
+                        }
                     }
                 }
                 
@@ -200,17 +202,19 @@ class FacebookAPIController extends Controller {
                 $date_du_jour = strtolower($this->weekdays[date("N")]. " " . date("j") . " " . $this->months[date("n")]);
                 $date_du_jour = $this->wd_remove_accents($date_du_jour);
                 
-                $exploded_title = explode("Repas du jour", $title);
-                $date_menu = trim($this->wd_remove_accents($exploded_title[1]));
+                $exploded_title = explode("Repas du", $title);
+                $date_menu = trim($this->wd_remove_accents(str_replace("jour", "", $exploded_title[1])));
                 
                 //Présence des mots clés
                 $keyword_found = false;
                 $plats_favoris = array();
                 foreach($this->keywords as $keyword){
                     $a = $this->wd_remove_accents(strtolower($message));
-                    if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
-                        $keyword_found = true;
-                        array_push($plats_favoris, $keyword);
+                    if(!empty($a)){
+                        if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
+                            $keyword_found = true;
+                            array_push($plats_favoris, $keyword);
+                        }
                     }
                 }
                 

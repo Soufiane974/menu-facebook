@@ -14,6 +14,10 @@ class DefaultController extends Controller {
     const fb_appId = "994872597252810"; //API_ID
     const fb_secret = "953b1e6530e855a3b727bf5a1ad677d2"; //SECRET
     
+    /**
+     * Va faire le rendu de la page principale de l'application
+     * @return type
+     */
     public function indexAction()
     {
         if(!session_id()){
@@ -45,7 +49,7 @@ class DefaultController extends Controller {
     }
     
     /**
-     * Methode de test : Permet d'effacer les données de la session
+     * Methode de test : Permet d'effacer les données de la session(permet de déconnecter l'utilisateur facebook)
      * 
      */
     public function killSession(){

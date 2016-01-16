@@ -199,6 +199,7 @@ class FacebookAPIController extends Controller {
                 
                 $message = nl2br($message); //Conversion des \n en <br/>
                 
+                //Recherche d'une correspondance entre la date indiquée dans le menu et la date du jour
                 $date_du_jour = strtolower($this->weekdays[date("N")]. " " . date("j") . " " . $this->months[date("n")]);
                 $date_du_jour = $this->wd_remove_accents($date_du_jour);
                 
@@ -213,7 +214,7 @@ class FacebookAPIController extends Controller {
                     if(!empty($a)){
                         if(strpos($a,$this->wd_remove_accents(strtolower($keyword))) !== false){
                             $keyword_found = true;
-                            array_push($plats_favoris, $keyword);
+                            array_push($plats_favoris, $keyword);   //Ajoute le mot clé trouvé dans la liste des plats favoris
                         }
                     }
                 }
@@ -236,6 +237,13 @@ class FacebookAPIController extends Controller {
         return $posts_menu_array;
     }
     
+    /**
+     * Fonction qui va enlever les accents d'une chaine de caractère
+     * 
+     * @param string $str
+     * @param string $charset
+     * @return string
+     */
     function wd_remove_accents($str, $charset = 'utf-8') {
         $str = htmlentities($str, ENT_NOQUOTES, $charset);
 

@@ -38,7 +38,7 @@ class FacebookAPIController extends Controller {
         12 => "Decembre"
     ];
     
-    private $keywords = ["Poulet à la crème", "Rougaille Saucisse", "Rôti porc", "Civet cerf", "Canard aux olives", "Riz blanc"];
+    private $keywords = ["Poulet à la crème", "Rougaille Saucisse"];
 
     /**
      * Renvoi vrai si l'utilisateur est loggé sur facebook, faux sinon(présence d'un access token ou non)
